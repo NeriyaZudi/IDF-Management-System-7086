@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Serial_Number__c</fullName>
+    <description>מספר צ צבאי</description>
+    <externalId>false</externalId>
+    <inlineHelpText>מספר צ צבאי</inlineHelpText>
+    <label>Serial Number</label>
+    <length>255</length>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

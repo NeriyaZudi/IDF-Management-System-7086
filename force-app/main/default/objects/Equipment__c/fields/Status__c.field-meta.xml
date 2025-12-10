@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Status__c</fullName>
+    <inlineHelpText>סטטוס נוכחי</inlineHelpText>
+    <label>Status</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>ביטחונית</fullName>
+                <default>false</default>
+                <label>ביטחונית</label>
+            </value>
+            <value>
+                <fullName>לחימה</fullName>
+                <default>false</default>
+                <label>לחימה</label>
+            </value>
+            <value>
+                <fullName>חייל חתום</fullName>
+                <default>false</default>
+                <label>חייל חתום</label>
+            </value>
+            <value>
+                <fullName>מחלקת קשר</fullName>
+                <default>false</default>
+                <label>מחלקת קשר</label>
+            </value>
+            <value>
+                <fullName>זוכה</fullName>
+                <default>false</default>
+                <label>זוכה</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Type__c</fullName>
+    <label>Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>מ.ק 710</fullName>
+                <default>false</default>
+                <label>מ.ק 710</label>
+            </value>
+            <value>
+                <fullName>אולר</fullName>
+                <default>false</default>
+                <label>אולר</label>
+            </value>
+            <value>
+                <fullName>משיב כחול</fullName>
+                <default>false</default>
+                <label>משיב כחול</label>
+            </value>
+            <value>
+                <fullName>מגן מכלול</fullName>
+                <default>false</default>
+                <label>מגן מכלול</label>
+            </value>
+            <value>
+                <fullName>נר הלילה</fullName>
+                <default>false</default>
+                <label>נר הלילה</label>
+            </value>
+            <value>
+                <fullName>טלפון אדום</fullName>
+                <default>false</default>
+                <label>טלפון אדום</label>
+            </value>
+            <value>
+                <fullName>אמר&quot;ל</fullName>
+                <default>false</default>
+                <label>אמר&quot;ל</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

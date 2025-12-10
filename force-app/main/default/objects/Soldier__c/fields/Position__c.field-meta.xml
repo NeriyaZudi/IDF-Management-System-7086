@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Position__c</fullName>
+    <description>תפקיד בפלוגה</description>
+    <inlineHelpText>תפקיד בפלוגה</inlineHelpText>
+    <label>Position</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>מפעיל צמה  שלב 7</fullName>
+                <default>false</default>
+                <label>מפעיל צמה  שלב 7</label>
+            </value>
+            <value>
+                <fullName>מפעיל צמה שלב 7 + 8</fullName>
+                <default>false</default>
+                <label>מפעיל צמה שלב 7 + 8</label>
+            </value>
+            <value>
+                <fullName>משק צמה</fullName>
+                <default>false</default>
+                <label>משק צמה</label>
+            </value>
+            <value>
+                <fullName>מפקד מחלקה</fullName>
+                <default>false</default>
+                <label>מפקד מחלקה</label>
+            </value>
+            <value>
+                <fullName>סגן מפקד פלוגה</fullName>
+                <default>false</default>
+                <label>סגן מפקד פלוגה</label>
+            </value>
+            <value>
+                <fullName>מפקד פלוגה</fullName>
+                <default>false</default>
+                <label>מפקד פלוגה</label>
+            </value>
+            <value>
+                <fullName>נהג</fullName>
+                <default>false</default>
+                <label>נהג</label>
+            </value>
+            <value>
+                <fullName>קשפל</fullName>
+                <default>false</default>
+                <label>קשפל</label>
+            </value>
+            <value>
+                <fullName>חופל</fullName>
+                <default>false</default>
+                <label>חופל</label>
+            </value>
+            <value>
+                <fullName>רספ</fullName>
+                <default>false</default>
+                <label>רספ</label>
+            </value>
+            <value>
+                <fullName>סרספ</fullName>
+                <default>false</default>
+                <label>סרספ</label>
+            </value>
+            <value>
+                <fullName>קצין</fullName>
+                <default>false</default>
+                <label>קצין</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

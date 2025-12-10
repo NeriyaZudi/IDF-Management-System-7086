@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <logo>asset_2025_12_09_080930_png</logo>
+        <logoVersion>1</logoVersion>
+        <shouldOverrideOrgTheme>true</shouldOverrideOrgTheme>
+    </brand>
+    <description>אפליקציה לניהול פלוגת צמה 7086</description>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>צמ&quot;ה 7086</label>
+    <navType>Standard</navType>
+    <tabs>Soldier__c</tabs>
+    <tabs>Equipment__c</tabs>
+    <tabs>Signature__c</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>X7086_UtilityBar</utilityBar>
+</CustomApplication>
