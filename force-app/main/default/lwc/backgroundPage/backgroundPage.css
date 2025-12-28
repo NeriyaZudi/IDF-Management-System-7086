@@ -1,0 +1,90 @@
+:host {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* הקונטיינר – הגובה שלו נקבע לפי התוכן */
+.background-container {
+    position: relative;
+    width: 100%;
+    padding: 20px 30px;
+    overflow: hidden;
+}
+
+/* שכבת התמונה שמתפרשת על כל גובה ורוחב הקומפוננטה */
+.image-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; /* פה הקסם – מתמתח לפי גובה כל הקומפוננטה */
+    background-image: url('/resource/TzamaBackgroundd');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+/* שכבת שקיפות מעל התמונה */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    opacity: 0.35;
+    z-index: 2;
+}
+
+/* כל התוכן */
+.content {
+    position: relative;
+    z-index: 3; /* מעל התמונה וה-overlay */
+    direction: rtl;
+}
+
+/* שורת כותרת + לוגו */
+.header-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+/* לוגו */
+.logo {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* כותרת */
+.main-title {
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: right;
+    text-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+/* טקסט היסטורי */
+.description {
+    max-width: 80%;
+    margin-left: auto; /* שומר אותו צמוד לימין */
+}
+
+.description p {
+    color: white;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    text-align: right;
+    margin: 0;
+    text-shadow: 0 0 6px rgba(0,0,0,0.6);
+}

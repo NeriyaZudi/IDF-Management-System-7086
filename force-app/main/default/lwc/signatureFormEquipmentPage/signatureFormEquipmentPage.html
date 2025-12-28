@@ -1,0 +1,83 @@
+<template>
+    <lightning-card title="חתימת חייל על ציוד זה" icon-name="standard:task">
+        <div class="slds-p-around_medium">
+            <!-- פרטי הציוד הנוכחי -->
+            <div class="slds-box slds-m-bottom_medium">
+                <h2 class="slds-text-heading_small slds-m-bottom_small">פרטי הציוד</h2>
+                <lightning-record-view-form
+                    record-id={recordId}
+                    object-api-name="Equipment__c">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-output-field field-name="Name"></lightning-output-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-output-field field-name="Serial_Number__c"></lightning-output-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-output-field field-name="Type__c"></lightning-output-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-output-field field-name="Status__c"></lightning-output-field>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-output-field field-name="Current_Location__c"></lightning-output-field>
+                        </div>
+                    </div>
+                </lightning-record-view-form>
+            </div>
+
+            <!-- בחירת חייל + מיקום -->
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6">
+                    <lightning-combobox
+                        name="soldier"
+                        label="חייל"
+                        value={selectedSoldierId}
+                        placeholder="בחר חייל..."
+                        options={soldierOptions}
+                        onchange={handleSoldierChange}
+                        required>
+                    </lightning-combobox>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6">
+                    <lightning-input
+                        type="text"
+                        label="מיקום הציוד (טקסט חופשי)"
+                        value={location}
+                        onchange={handleLocationChange}
+                        placeholder="אם ריק ישתמש ב'אצל <שם החייל>'">
+                    </lightning-input>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <!-- הערות -->
+            <div class="slds-m-top_medium">
+                <lightning-textarea
+                    label="הערות"
+                    value={comments}
+                    onchange={handleCommentsChange}>
+                </lightning-textarea>
+            </div>
+
+            <!-- כפתור חתימה -->
+            <div class="slds-m-top_large slds-text-align_right">
+                <lightning-button
+                    variant="brand"
+                    label="חתום על הציוד"
+                    onclick={handleSign}
+                    disabled={isSignDisabled}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- ספינר -->
+        <template if:true={isLoading}>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="שומר..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+    </lightning-card>
+</template>

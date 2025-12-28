@@ -1,0 +1,80 @@
+<template>
+    <lightning-card title="טופס חתימה על ציוד קשר" icon-name="standard:task">
+        <div class="slds-p-around_medium">
+
+            <!-- בחירת חייל -->
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6">
+                    <lightning-combobox
+                        name="soldier"
+                        label="חייל"
+                        value={selectedSoldierId}
+                        placeholder="בחר חייל..."
+                        options={soldierOptions}
+                        onchange={handleSoldierChange}
+                        required>
+                    </lightning-combobox>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6">
+                    <lightning-input
+                        type="text"
+                        label="מיקום הציוד (טקסט חופשי)"
+                        value={location}
+                        onchange={handleLocationChange}>
+                    </lightning-input>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <!-- רשימת ציוד פנוי -->
+            <div class="slds-m-top_medium">
+                <h2 class="slds-text-heading_small slds-m-bottom_x-small">
+                    בחר ציוד לחתימה
+                </h2>
+
+                <template if:true={equipmentData}>
+                    <lightning-datatable
+                        key-field="id"
+                        data={equipmentData}
+                        columns={columns}
+                        onrowselection={handleRowSelection}
+                        show-row-number-column>
+                    </lightning-datatable>
+                </template>
+
+                <template if:true={equipmentError}>
+                    <div class="slds-text-color_error">
+                        שגיאה בטעינת הציוד: {equipmentError}
+                    </div>
+                </template>
+            </div>
+
+            <!-- הערות -->
+            <div class="slds-m-top_medium">
+                <lightning-textarea
+                    label="הערות"
+                    value={comments}
+                    onchange={handleCommentsChange}>
+                </lightning-textarea>
+            </div>
+
+            <!-- כפתור חתימה -->
+            <div class="slds-m-top_large slds-text-align_right">
+                <lightning-button
+                    variant="brand"
+                    label="חתום על הציוד"
+                    onclick={handleSign}
+                    disabled={isSignDisabled}>
+                </lightning-button>
+            </div>
+
+        </div>
+
+        <template if:true={isLoading}>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <div class="spinner-container">
+                <lightning-spinner alternative-text="שומר..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+    </lightning-card>
+</template>

@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="היסטוריית חתימות עבור הציוד" icon-name="standard:log_a_call">
+        <div class="slds-p-around_medium">
+
+            <!-- טבלה כשהיו חתימות -->
+            <template if:true={hasData}>
+                <lightning-datatable
+                    key-field="id"
+                    data={data}
+                    columns={columns}
+                    show-row-number-column>
+                </lightning-datatable>
+            </template>
+
+            <!-- הודעה כשאין חתימות -->
+            <template if:true={noData}>
+                <p>אין עדיין חתימות עבור ציוד זה.</p>
+            </template>
+
+            <!-- הודעת שגיאה -->
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-m-top_small">
+                    {error}
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

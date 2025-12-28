@@ -1,0 +1,83 @@
+<template>
+    <lightning-card title="Integration Framework Guide" icon-name="utility:knowledge_base">
+        <div class="slds-p-around_medium">
+            
+            <lightning-accordion allow-multiple-sections-open>
+                
+                <lightning-accordion-section name="A" label="1. How to add a new Integration System">
+                    <div class="slds-text-longform">
+                        <p>To connect a new external API (e.g., a new Billing Provider or ERP):</p>
+                        <ol class="slds-list_ordered">
+                            <li>Go to the <b>Integration Systems</b> tab.</li>
+                            <li>Click the <b>Add New System</b> button at the bottom.</li>
+                            <li>Enter the <b>System Name</b> (e.g., "Oracle ERP").</li>
+                            <li>Enter the <b>Endpoint URL</b> (e.g., "callout:Oracle_API"). 
+                                <i>Note: It is best practice to use Named Credentials.</i>
+                            </li>
+                            <li>Set <b>Max Retries</b> (e.g., 3). If set to 0, failures will not retry.</li>
+                        </ol>
+                    </div>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="B" label="2. How to add a new Salesforce Object">
+                    <div class="slds-text-longform">
+                        <p>To trigger an integration when a Salesforce record changes:</p>
+                        <ol class="slds-list_ordered">
+                            <li>Go to the <b>Triggers & Mappings</b> tab.</li>
+                            <li>Click <b>Add New Trigger</b> on the left panel.</li>
+                            <li>Select the <b>Target System</b> you defined in Step 1.</li>
+                            <li>Enter the <b>Object API Name</b> (e.g., <code>Account</code> or <code>Custom_Object__c</code>).</li>
+                            <li>Enter the <b>Field API Name</b> (e.g., <code>Rating</code>) and the <b>Value</b> (e.g., <code>Hot</code>).</li>
+                        </ol>
+
+                        <div class="slds-box slds-theme_warning slds-theme_alert-texture slds-m-top_small">
+                            <div class="slds-media slds-media_center">
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="utility:warning" alternative-text="Warning" size="small"></lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <strong>Critical Step: Create a Flow</strong><br/>
+                                    Adding the configuration above is not enough. You must go to <b>Salesforce Setup > Flows</b> and create a Record-Triggered Flow for this object. The Flow must call the Apex Action <b>"Dispatch Integrations"</b>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="C" label="3. How to map fields">
+                    <div class="slds-text-longform">
+                        <p>To define what data is sent to the external system:</p>
+                        <ol class="slds-list_ordered">
+                            <li>Go to the <b>Triggers & Mappings</b> tab.</li>
+                            <li>In the left table, find the Object/System row you want to map.</li>
+                            <li>Click the <b>Dropdown Arrow</b> on the right side of the row (Action Menu).</li>
+                            <li>Select <b>Map Fields</b>.</li>
+                            <li>The right-hand panel will activate. Enter:
+                                <ul>
+                                    <li><b>Salesforce Field:</b> The API name of the field (e.g., <code>BillingCity</code>).</li>
+                                    <li><b>JSON Key:</b> The name the external system expects (e.g., <code>billing_address_city</code>).</li>
+                                </ul>
+                            </li>
+                            <li>Click <b>Add</b>. The system will automatically generate the JSON payload based on these keys.</li>
+                        </ol>
+                    </div>
+                </lightning-accordion-section>
+
+                <lightning-accordion-section name="D" label="4. How to Deactivate System Integration">
+                    <div class="slds-text-longform">
+                        <p>If you need to temporarily stop sending data to a specific external system (e.g., during maintenance):</p>
+                        <ol class="slds-list_ordered">
+                            <li>Go to the <b>Integration Systems</b> tab.</li>
+                            <li>Find the system you want to stop in the table.</li>
+                            <li>Click the <b>Dropdown Arrow</b> on the far right of that row.</li>
+                            <li>Select <b>Deactivate System</b>.</li>
+                            <li>Confirm the action in the popup modal.</li>
+                        </ol>
+                        <p><i><b>Note:</b> This sets the 'Active' flag to false. The configuration remains in Salesforce, but the Apex Dispatcher will ignore it until you reactivate it (by editing the Metadata record in Setup).</i></p>
+                    </div>
+                </lightning-accordion-section>
+
+            </lightning-accordion>
+        </div>
+    </lightning-card>
+</template>
