@@ -1,30 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>Tzama_7086</members>
-		<name>CustomApplication</name>
-	</types>
-	<types>
-		<members>Equipment__c</members>
-		<members>Signature__c</members>
-		<members>Soldier__c</members>
-		<name>CustomObject</name>
-	</types>
-	<types>
-		<members>Equipment__c</members>
-		<members>Signature__c</members>
-		<members>Soldier__c</members>
-		<name>CustomTab</name>
-	</types>
-	<types>
-		<members>Equipment__c-Equipment Layout</members>
-		<members>Signature__c-Signature Layout</members>
-		<members>Soldier__c-Soldier Layout</members>
-		<name>Layout</name>
-	</types>
-	<types>
 		<members>*</members>
-		<name>StaticResource</name>
+		<name>ApexTrigger</name>
 	</types>
 	<version>65.0</version>
 </Package>
