@@ -1,0 +1,43 @@
+<template>
+    <lightning-card title="Field Mappings" icon-name="standard:data_mapping">
+        <div class="slds-p-around_medium">
+            
+            <template if:false={hasSelection}>
+                <div class="slds-text-align_center slds-text-color_weak slds-p-vertical_large">
+                    <lightning-icon icon-name="utility:touch_action" size="medium"></lightning-icon>
+                    <p class="slds-m-top_small">Select a Object Trigger on the left to manage mappings.</p>
+                </div>
+            </template>
+
+            <template if:true={hasSelection}>
+                <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                    <p>Mapping: <b>{objectName}</b> ➜ <b>{systemLabel}</b></p>
+                    <div class="slds-grid slds-gutters slds-m-top_small slds-grid_vertical-align-end">
+                        <div class="slds-col">
+                            <lightning-input label="SF Field" value={newSource} onchange={handleSourceChange} placeholder="e.g. Amount"></lightning-input>
+                        </div>
+                        <div class="slds-col">
+                            <lightning-input label="JSON Key" value={newTarget} onchange={handleTargetChange} placeholder="e.g. sf_amount"></lightning-input>
+                        </div>
+                        <div class="slds-col slds-grow-none">
+                            <lightning-button label="Add" variant="brand" onclick={handleSaveMapping} disabled={isLoading}></lightning-button>
+                        </div>
+                    </div>
+                </div>
+
+                <lightning-datatable
+                    key-field="id"
+                    data={mappings}
+                    columns={columns}
+                    onrowaction={handleRowAction} 
+                    hide-checkbox-column>
+                </lightning-datatable>
+                
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </template>
+
+            </template>
+        </div>
+    </lightning-card>
+</template>

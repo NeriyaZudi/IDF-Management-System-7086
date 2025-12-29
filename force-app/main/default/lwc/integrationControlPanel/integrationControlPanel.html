@@ -1,0 +1,36 @@
+<template>
+    <lightning-card title="Integration Control Panel" icon-name="custom:custom67">
+        
+        <lightning-tabset>
+            
+            <lightning-tab label="Integration Systems">
+                <c-integration-system-manager></c-integration-system-manager>
+            </lightning-tab>
+            
+            <lightning-tab label="Triggers & Mappings">
+                
+                <div class="slds-p-around_medium">
+                    <div class="slds-grid slds-gutters">
+                        
+                        <div class="slds-col slds-size_1-of-2">
+                            <c-integration-trigger-manager 
+                                ontriggerselect={handleTriggerSelect}>
+                            </c-integration-trigger-manager>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <c-integration-field-mapping-manager
+                                object-name={selectedObject}
+                                system-dev-name={selectedSystemDevName}
+                                system-label={selectedSystemLabel}>
+                            </c-integration-field-mapping-manager>
+                        </div>
+
+                    </div>
+                </div>
+
+            </lightning-tab>
+        </lightning-tabset>
+
+    </lightning-card>
+</template>

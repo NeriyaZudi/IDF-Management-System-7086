@@ -1,0 +1,50 @@
+<template>
+    <lightning-card title="Trigger Configuration" icon-name="standard:flow">
+        <div class="slds-p-around_medium">
+            
+            <lightning-datatable
+                key-field="id"
+                data={triggers}
+                columns={columns}
+                onrowaction={handleRowAction}
+                hide-checkbox-column>
+            </lightning-datatable>
+
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Add New Object Integration" 
+                    onclick={openAddModal} 
+                    variant="brand" 
+                    icon-name="utility:add">
+                </lightning-button>
+            </div>
+
+        </div>
+
+        <template if:true={isAddModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                         <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeAddModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                        </button>
+                        <h2 class="slds-text-heading_medium">Add New Object Trigger</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-combobox label="Target System" value={selectedSystem} placeholder="Select System" options={systemOptions} onchange={handleSystemChange} required></lightning-combobox>
+                        <div class="slds-grid slds-gutters slds-m-top_medium">
+                            <div class="slds-col"><lightning-input label="Object API Name" data-id="trgObject" required></lightning-input></div>
+                            <div class="slds-col"><lightning-input label="Field API Name" data-id="trgField" required></lightning-input></div>
+                        </div>
+                        <lightning-input class="slds-m-top_medium" label="Trigger Value" data-id="trgValue"></lightning-input>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={closeAddModal} class="slds-m-right_small"></lightning-button>
+                        <lightning-button label="Save Trigger" variant="brand" onclick={handleSave}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </lightning-card>
+</template>
