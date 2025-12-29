@@ -44,21 +44,28 @@
                     </div>
                 </lightning-accordion-section>
 
-                <lightning-accordion-section name="C" label="3. How to map fields">
+                <lightning-accordion-section name="C" label="3. How to manage Field Mappings">
                     <div class="slds-text-longform">
-                        <p>To define what data is sent to the external system:</p>
+                        <h3 class="slds-text-heading_small"><b>Adding a Mapping</b></h3>
                         <ol class="slds-list_ordered">
                             <li>Go to the <b>Triggers & Mappings</b> tab.</li>
                             <li>In the left table, find the Object/System row you want to map.</li>
-                            <li>Click the <b>Dropdown Arrow</b> on the right side of the row (Action Menu).</li>
-                            <li>Select <b>Map Fields</b>.</li>
+                            <li>Click the <b>Dropdown Arrow</b> on the right side of the row and select <b>Map Fields</b>.</li>
                             <li>The right-hand panel will activate. Enter:
                                 <ul>
                                     <li><b>Salesforce Field:</b> The API name of the field (e.g., <code>BillingCity</code>).</li>
                                     <li><b>JSON Key:</b> The name the external system expects (e.g., <code>billing_address_city</code>).</li>
                                 </ul>
                             </li>
-                            <li>Click <b>Add</b>. The system will automatically generate the JSON payload based on these keys.</li>
+                            <li>Click <b>Add</b>. The system will prevent duplicate source fields for the same object.</li>
+                        </ol>
+
+                        <h3 class="slds-text-heading_small slds-m-top_medium"><b>Removing a Mapping</b></h3>
+                        <ol class="slds-list_ordered">
+                            <li>In the right-hand mapping table, locate the specific field map you want to remove.</li>
+                            <li>Click the <b>Dropdown Arrow</b> on the right side of that row.</li>
+                            <li>Select <b>Remove Mapping</b>.</li>
+                            <li>The mapping will be deactivated immediately and removed from the list.</li>
                         </ol>
                     </div>
                 </lightning-accordion-section>
@@ -73,7 +80,7 @@
                             <li>Select <b>Deactivate System</b>.</li>
                             <li>Confirm the action in the popup modal.</li>
                         </ol>
-                        <p><i><b>Note:</b> This sets the 'Active' flag to false. The configuration remains in Salesforce, but the Apex Dispatcher will ignore it until you reactivate it (by editing the Metadata record in Setup).</i></p>
+                        <p><i><b>Note:</b> This sets the 'Active' flag to false. You can reactivate it at any time using the <b>Reactivate System</b> action in the same menu.</i></p>
                     </div>
                 </lightning-accordion-section>
 

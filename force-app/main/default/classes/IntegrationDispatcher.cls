@@ -8,10 +8,10 @@ public with sharing class IntegrationDispatcher {
         public String objectApiName;
         
         @InvocableVariable(label='Trigger Field' required=true)
-        public String triggerField; // e.g., 'StageName'
+        public String triggerField; 
         
         @InvocableVariable(label='Trigger Value' required=true)
-        public String triggerValue; // e.g., 'Contracting'
+        public String triggerValue; 
     }
 
     @InvocableMethod(label='Dispatch Integrations' description='Evaluates metadata and creates integration requests')
@@ -44,11 +44,10 @@ public with sharing class IntegrationDispatcher {
                 Integration_Request__c intReq = new Integration_Request__c();
                 intReq.SObjectApiName__c = r.objectApiName;
                 intReq.RecordId__c = r.recordId;
-                intReq.SystemKey__c = config.Integration_System__r.Label; // e.g. "Billing System"
+                intReq.SystemKey__c = config.Integration_System__r.Label; 
                 intReq.Status__c = 'Pending';
                 intReq.AttemptCount__c = 0;
-                // Snapshot the max retries from config to the record
-                intReq.Max_Retries__c = config.Integration_System__r.Max_Retries__c; 
+                intReq.Max_Retries__c = config.Integration_System__r.Max_Retries__c;  // Snapshot the max retries from config to the record
                 
                 newRequests.add(intReq);
             }
@@ -56,8 +55,7 @@ public with sharing class IntegrationDispatcher {
         
         insert newRequests;
         
-        // 4. Fire the Queueable Worker immediately
-        // We pass the IDs of the records we just created
+        // 4. Fire the Queueable Worker immediately pass the IDs of the new records 
         if (!newRequests.isEmpty()) {
             Set<Id> reqIds = new Map<Id, Integration_Request__c>(newRequests).keySet();
             System.enqueueJob(new IntegrationWorker(reqIds));

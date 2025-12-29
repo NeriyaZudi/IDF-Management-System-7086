@@ -12,7 +12,6 @@
             <template if:true={hasSelection}>
                 <div class="slds-box slds-theme_shade slds-m-bottom_medium">
                     <p>Mapping: <b>{objectName}</b> ➜ <b>{systemLabel}</b></p>
-                    
                     <div class="slds-grid slds-gutters slds-m-top_small slds-grid_vertical-align-end">
                         <div class="slds-col">
                             <lightning-input label="SF Field" value={newSource} onchange={handleSourceChange} placeholder="e.g. Amount"></lightning-input>
@@ -21,7 +20,7 @@
                             <lightning-input label="JSON Key" value={newTarget} onchange={handleTargetChange} placeholder="e.g. sf_amount"></lightning-input>
                         </div>
                         <div class="slds-col slds-grow-none">
-                            <lightning-button label="Add" variant="brand" onclick={handleSaveMapping}></lightning-button>
+                            <lightning-button label="Add" variant="brand" onclick={handleSaveMapping} disabled={isLoading}></lightning-button>
                         </div>
                     </div>
                 </div>
@@ -30,10 +29,15 @@
                     key-field="id"
                     data={mappings}
                     columns={columns}
+                    onrowaction={handleRowAction} 
                     hide-checkbox-column>
                 </lightning-datatable>
-            </template>
+                
+                <template if:true={isLoading}>
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </template>
 
+            </template>
         </div>
     </lightning-card>
 </template>

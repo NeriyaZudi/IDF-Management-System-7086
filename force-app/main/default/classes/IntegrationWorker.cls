@@ -14,15 +14,14 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
             FROM Integration_Request__c
             WHERE Id IN :requestIds
         ];
-        
+
         if(requests.isEmpty()) return;
 
         // 2. Load Configuration
         Map<String, Integration_System__mdt> systemMap = getSystemMetadata();
         Map<String, List<Field_Mapping__mdt>> mappingMap = getFieldMappings();
 
-        // 3. Dynamic Data Loading (The Fix)
-        // We must group IDs by Object Type to build the correct queries
+        // 3. Dynamic Data Loading
         Map<String, Set<Id>> objectToRecordIds = new Map<String, Set<Id>>();
         
         for (Integration_Request__c req : requests) {
@@ -38,27 +37,24 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
         for (String objName : objectToRecordIds.keySet()) {
             Set<Id> idsToQuery = objectToRecordIds.get(objName);
             
-            // Collect all fields needed for this Object across all systems
-            Set<String> fieldsToQuery = new Set<String>{'Id'}; // Always query Id
+            Set<String> fieldsToQuery = new Set<String>{'Id'}; 
             
-            // Iterate all mappings to find fields belonging to this Object context
-            // (In a complex org, you might filter mappings by Object, but iterating all is fine here)
+            //Filter fields by Object Name 
             for (List<Field_Mapping__mdt> mapList : mappingMap.values()) {
                 for (Field_Mapping__mdt fm : mapList) {
-                    // Check if mapping is relevant? 
-                    // Simplified: We query the field if it exists on the object. 
-                    // To be strictly safe, we'd check the Trigger Config, 
-                    // but usually, field names are unique enough or valid to query.
-                    fieldsToQuery.add(fm.Source_Field_API__c);
+                    // Only add fields that belong to the current Object (e.g., Account)
+                    if (fm.Object_API_Name__c == objName) {
+                        fieldsToQuery.add(fm.Source_Field_API__c);
+                    }
                 }
             }
 
-            // Build Dynamic Query
+            System.debug('@@ Querying ' + objName + ' fields: ' + fieldsToQuery);
+
             String query = 'SELECT ' + String.join(new List<String>(fieldsToQuery), ',') + 
                            ' FROM ' + objName + 
                            ' WHERE Id IN :idsToQuery';
             
-            // Execute and store
             try {
                 List<SObject> results = Database.query(query);
                 for (SObject s : results) {
@@ -66,18 +62,16 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
                 }
             } catch (Exception e) {
                 System.debug('Query failed for object ' + objName + ': ' + e.getMessage());
-                // In production, log this as a Permanent Failure for these requests
             }
         }
 
-        // 4. Processing Loop (Unchanged)
+        // 4. Processing Loop
         List<Integration_Request__c> requestsToUpdate = new List<Integration_Request__c>();
         List<Integration_Attempt__c> attemptsToInsert = new List<Integration_Attempt__c>();
 
         for (Integration_Request__c req : requests) {
             SObject sourceRecord = sourceDataMap.get(req.RecordId__c);
             
-            // If query failed or record deleted, mark permanent fail
             if (sourceRecord == null) {
                 req.Status__c = 'FailedPermanent';
                 req.LastErrorMessage__c = 'Source Record not found or Query Failed';
@@ -88,31 +82,31 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
             Integration_System__mdt sysConfig = systemMap.get(req.SystemKey__c);
             List<Field_Mapping__mdt> mappings = mappingMap.get(req.SystemKey__c);
             
-            // Build JSON Payload
             Map<String, Object> jsonMap = new Map<String, Object>();
             if (mappings != null) {
                 for (Field_Mapping__mdt fm : mappings) {
-                    try {
-                        // Dynamically get field value
-                        jsonMap.put(fm.Target_JSON_Key__c, sourceRecord.get(fm.Source_Field_API__c));
-                    } catch(Exception e) {
-                        jsonMap.put(fm.Target_JSON_Key__c, null); // Handle missing fields gracefully
+                    // --- FIX: Ensure we only map fields for this specific object ---
+                    if (fm.Object_API_Name__c == req.SObjectApiName__c) {
+                        try {
+                            jsonMap.put(fm.Target_JSON_Key__c, sourceRecord.get(fm.Source_Field_API__c));
+                        } catch(Exception e) {
+                            jsonMap.put(fm.Target_JSON_Key__c, null); 
+                        }
                     }
                 }
             }
             String payload = JSON.serialize(jsonMap);
-
-            // Mock Callout
+            
             HttpResponse res;
             try {
+                // Using endpoint from config
                 res = IntegrationMockService.performMockCallout(sysConfig.Endpoint__c, payload);
             } catch (Exception e) {
                 res = new HttpResponse();
-                res.setStatusCode(504); 
+                res.setStatusCode(500); 
                 res.setBody('System Exception: ' + e.getMessage());
             }
 
-            // Logging & Status Updates
             Integration_Attempt__c attempt = new Integration_Attempt__c();
             attempt.Integration_Request__c = req.Id;
             attempt.Timestamp__c = System.now();
@@ -123,7 +117,6 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
             req.LastHttpStatusCode__c = code;
             req.LastErrorMessage__c = res.getBody().left(255);
 
-            // STATUS LOGIC
             if (code >= 200 && code < 300) {
                 req.Status__c = 'Success';
                 attempt.IsRetryable__c = false;
@@ -133,7 +126,6 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
                 if (req.AttemptCount__c < req.Max_Retries__c) {
                     req.Status__c = 'FailedTemporary';
                     req.AttemptCount__c++;
-                    // Linear Backoff: 1 min, 2 min, 3 min...
                     req.NextRunAt__c = System.now().addMinutes(1 * (Integer)req.AttemptCount__c);
                 } else {
                     req.Status__c = 'FailedPermanent'; 
@@ -155,8 +147,7 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
     // --- Helpers ---
     private Map<String, Integration_System__mdt> getSystemMetadata() {
         Map<String, Integration_System__mdt> m = new Map<String, Integration_System__mdt>();
-        // Querying all systems is safe for low volumes. 
-        for(Integration_System__mdt s : [SELECT Label, Endpoint__c, Max_Retries__c, Timeout_Ms__c FROM Integration_System__mdt]) {
+        for(Integration_System__mdt s : [SELECT Label, Endpoint__c, Max_Retries__c FROM Integration_System__mdt]) {
             m.put(s.Label, s);
         }
         return m;
@@ -164,8 +155,9 @@ public with sharing class IntegrationWorker implements Queueable, Database.Allow
 
     private Map<String, List<Field_Mapping__mdt>> getFieldMappings() {
         Map<String, List<Field_Mapping__mdt>> m = new Map<String, List<Field_Mapping__mdt>>();
-        // Querying all mappings ensures we have what we need for any object type.
-        for (Field_Mapping__mdt fm : [SELECT Integration_System__r.Label, Source_Field_API__c, Target_JSON_Key__c FROM Field_Mapping__mdt]) {
+        
+        // ADDED: Object_API_Name__c to the query
+        for (Field_Mapping__mdt fm : [SELECT Integration_System__r.Label, Source_Field_API__c, Target_JSON_Key__c, Object_API_Name__c FROM Field_Mapping__mdt]) {
             String key = fm.Integration_System__r.Label;
             if (!m.containsKey(key)) m.put(key, new List<Field_Mapping__mdt>());
             m.get(key).add(fm);

@@ -10,18 +10,16 @@ public with sharing class IntegrationMockService {
             res.setBody('{"status": "success", "invoice_id": "INV-999"}');
         }
         // Simulate TEST API (Happy Path)
-        if (endpoint.contains('Test')) {
+        else if (endpoint.contains('Test')) {
             res.setStatusCode(200);
             res.setBody('{"status": "success", "account_rating": "Hot"}');
         }  
-        // Simulate DWH API (Temporary Failure - 503)
-        // This helps us test the Retry Logic
+        // Simulate DWH API (Temporary Failure - 503) Retry Logic
         else if (endpoint.contains('DWH')) {
             res.setStatusCode(503);
             res.setBody('{"error": "Service Unavailable. Database is locked."}');
         } 
-        // Simulate DOC API (Permanent Failure - 400)
-        // This helps us test the "Fail Fast" logic
+        // Simulate DOC API (Permanent Failure - 400) "Fail Fast" logic
         else if (endpoint.contains('DOC')) {
             res.setStatusCode(400);
             res.setBody('{"error": "Validation Error. Missing required field."}');
