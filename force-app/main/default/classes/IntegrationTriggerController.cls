@@ -43,7 +43,7 @@ public with sharing class IntegrationTriggerController {
         }
     }
 
-    // --- READ METHODS (Unchanged) ---
+    // --- READ METHODS ---
     @AuraEnabled(cacheable=true)
     public static List<TriggerWrapper> getTriggers() {
         List<TriggerWrapper> result = new List<TriggerWrapper>();
@@ -172,6 +172,30 @@ public with sharing class IntegrationTriggerController {
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         mdContainer.addMetadata(customMetadata);
         deployMetadata(mdContainer);
+    }
+
+    // ---  Get All SObjects ---
+    @AuraEnabled(cacheable=true)
+    public static List<ComboboxOption> getObjectOptions() {
+        List<ComboboxOption> options = new List<ComboboxOption>();
+        
+        Map<String, Schema.SObjectType> globalDescribe = Schema.getGlobalDescribe();
+        List<String> sortedNames = new List<String>(globalDescribe.keySet());
+        sortedNames.sort();
+
+        for (String objectName : sortedNames) {
+            Schema.DescribeSObjectResult describe = globalDescribe.get(objectName).getDescribe();
+            
+            // Filter: Only allow objects that are queryable, createable, and not system junk
+            if (describe.isQueryable() && describe.isCreateable() && 
+                !describe.getName().contains('__Tag') && 
+                !describe.getName().contains('__History') && 
+                !describe.getName().contains('__Share')) {
+                
+                options.add(new ComboboxOption(describe.getLabel() + ' (' + describe.getName() + ')', describe.getName()));
+            }
+        }
+        return options;
     }
 
     private static void deployMetadata(Metadata.DeployContainer mdContainer) {

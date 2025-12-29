@@ -25,7 +25,12 @@ export default class IntegrationSystemManager extends LightningElement {
     columns = [
         { label: 'System Name', fieldName: 'label' },
         { label: 'Endpoint', fieldName: 'endpoint' },
-        { label: 'Max Retries', fieldName: 'maxRetries', type: 'number' },
+        { 
+            label: 'Max Retries', 
+            fieldName: 'maxRetries', 
+            type: 'number',
+            cellAttributes: { alignment: 'left' } // Fixes the alignment to LTR
+        },
         { label: 'Active', fieldName: 'active', type: 'boolean' },
         { type: 'action', typeAttributes: { rowActions: ACTIONS } }
     ];

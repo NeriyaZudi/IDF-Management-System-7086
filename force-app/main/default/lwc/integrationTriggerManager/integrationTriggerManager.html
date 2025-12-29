@@ -31,12 +31,45 @@
                         <h2 class="slds-text-heading_medium">Add New Object Trigger</h2>
                     </header>
                     <div class="slds-modal__content slds-p-around_medium">
-                        <lightning-combobox label="Target System" value={selectedSystem} placeholder="Select System" options={systemOptions} onchange={handleSystemChange} required></lightning-combobox>
+                        
+                        <lightning-combobox 
+                            label="Target System" 
+                            value={selectedSystem} 
+                            placeholder="Select System" 
+                            options={systemOptions} 
+                            onchange={handleSystemChange} 
+                            required>
+                        </lightning-combobox>
+
                         <div class="slds-grid slds-gutters slds-m-top_medium">
-                            <div class="slds-col"><lightning-input label="Object API Name" data-id="trgObject" required></lightning-input></div>
-                            <div class="slds-col"><lightning-input label="Field API Name" data-id="trgField" required></lightning-input></div>
+                            <div class="slds-col">
+                                <lightning-combobox 
+                                    label="Object API Name" 
+                                    value={selectedObject} 
+                                    placeholder="Select Object" 
+                                    options={objectOptions} 
+                                    onchange={handleObjectChange} 
+                                    required>
+                                </lightning-combobox>
+                            </div>
+                            
+                            <div class="slds-col">
+                                <lightning-input 
+                                    label="Field API Name" 
+                                    data-id="trgField" 
+                                    placeholder="e.g. StageName"
+                                    required>
+                                </lightning-input>
+                            </div>
                         </div>
-                        <lightning-input class="slds-m-top_medium" label="Trigger Value" data-id="trgValue"></lightning-input>
+
+                        <lightning-input 
+                            class="slds-m-top_medium" 
+                            label="Trigger Value" 
+                            data-id="trgValue"
+                            placeholder="e.g. Closed Won">
+                        </lightning-input>
+
                     </div>
                     <footer class="slds-modal__footer">
                         <lightning-button label="Cancel" onclick={closeAddModal} class="slds-m-right_small"></lightning-button>

@@ -1,0 +1,87 @@
+<template>
+    <lightning-card title="Recovery Operations" icon-name="standard:service_crew_member">
+        <div class="slds-p-around_medium">
+            
+            <div class="slds-text-longform slds-m-bottom_medium">
+                <h3 class="slds-text-heading_small"><b>How Retry Logic Works</b></h3>
+                <p>When an integration fails with a temporary error (e.g., "503 Service Unavailable"), the system schedules a retry automatically.</p>
+                <ul>
+                    <li>The record status changes to <b>FailedTemporary</b>.</li>
+                    <li>The <b>Recovery Job</b> runs every 15 minutes to find these records.</li>
+                </ul>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-top_large">
+                <div class="slds-col">
+                    <div class="slds-box slds-theme_shade">
+                        <header class="slds-m-bottom_small">
+                            <h2 class="slds-text-heading_small">Manual Recovery</h2>
+                            <p class="slds-text-body_small">Run the batch immediately (e.g., after fixing a bug).</p>
+                        </header>
+                        <lightning-button 
+                            label="Run Recovery Batch Now" 
+                            variant="neutral" 
+                            onclick={handleRunNow}
+                            icon-name="utility:play"
+                            disabled={isScheduled}>
+                        </lightning-button>
+                    </div>
+                </div>
+
+                <div class="slds-col">
+                    <div class="slds-box slds-theme_shade">
+                        <header class="slds-m-bottom_small">
+                            <h2 class="slds-text-heading_small">Automatic Automation</h2>
+                            <p class="slds-text-body_small">Enable the background job to check for retries every 15 minutes.</p>
+                        </header>
+                        <template if:true={isScheduled}>
+                            <lightning-badge label="Active" icon-name="utility:success" class="slds-theme_success"></lightning-badge>
+                            <p class="slds-text-color_success slds-m-top_xx-small">Automation is running.</p>
+                        </template>
+                        <template if:false={isScheduled}>
+                             <lightning-button 
+                                label="Activate Auto-Retry (Every 15 Min)" 
+                                variant="brand" 
+                                onclick={handleSchedule}
+                                icon-name="utility:clock">
+                            </lightning-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-m-top_large slds-border_top slds-p-top_medium">
+                <div class="slds-grid slds-grid_align-spread slds-m-bottom_small">
+                    <h3 class="slds-text-heading_small"><b>Waiting for Retry (Last 3)</b></h3>
+                    <lightning-button 
+                        label="View All Requests" 
+                        icon-name="utility:list" 
+                        variant="base" 
+                        onclick={handleNavigateToListView}>
+                    </lightning-button>
+                </div>
+
+                <template if:true={recentFailures.length}>
+                    <div style="height: 150px;">
+                        <lightning-datatable
+                            key-field="Id"
+                            data={recentFailures}
+                            columns={columns}
+                            hide-checkbox-column>
+                        </lightning-datatable>
+                    </div>
+                </template>
+
+                <template if:false={recentFailures.length}>
+                    <div class="slds-align_absolute-center slds-m-top_medium slds-p-bottom_medium" style="flex-direction: column;">
+                        <div class="slds-text-color_success slds-text-heading_small slds-m-top_small">
+                            <b>No pending retries</b>
+                        </div>
+                        <div class="lottie-container" lwc:dom="manual" style="width: 150px; height: 150px;"></div>
+                    </div>
+                </template>
+            </div>
+
+        </div>
+    </lightning-card>
+</template>

@@ -84,6 +84,29 @@
                     </div>
                 </lightning-accordion-section>
 
+                <lightning-accordion-section name="E" label="5. How to Manage Retry Operations">
+                    <div class="slds-text-longform">
+                        <p>The system automatically handles temporary failures (e.g., 503 errors) by scheduling a retry for a later time. You can manage this process manually or automatically.</p>
+                        
+                        <h3 class="slds-text-heading_small slds-m-top_small"><b>Option A: Manual Recovery</b></h3>
+                        <p>Use this if you have fixed a bug or endpoint issue and want to retry all waiting records immediately.</p>
+                        <ol class="slds-list_ordered">
+                            <li>Go to the <b>Recovery Operations</b> tab.</li>
+                            <li>Click the <b>Run Recovery Batch Now</b> button.</li>
+                            <li>This will immediately process all waiting records where the retry time has passed.</li>
+                        </ol>
+
+                        <h3 class="slds-text-heading_small slds-m-top_medium"><b>Option B: Automatic Automation</b></h3>
+                        <p>Use this to ensure retries happen in the background without manual intervention.</p>
+                        <ol class="slds-list_ordered">
+                            <li>Go to the <b>Recovery Operations</b> tab.</li>
+                            <li>Click the <b>Activate Auto-Retry</b> button.</li>
+                            <li>This schedules a background job to run every 15 minutes (:00, :15, :30, :45).</li>
+                            <li>Once activated, the status badge will turn Green (Active).</li>
+                        </ol>
+                    </div>
+                </lightning-accordion-section>
+
             </lightning-accordion>
         </div>
     </lightning-card>

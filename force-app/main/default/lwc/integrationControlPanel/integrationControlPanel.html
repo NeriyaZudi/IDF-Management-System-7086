@@ -3,12 +3,11 @@
         
         <lightning-tabset>
             
-            <lightning-tab label="Integration Systems">
+            <lightning-tab label="Integration Systems" icon-name="utility:connected_apps">
                 <c-integration-system-manager></c-integration-system-manager>
             </lightning-tab>
             
-            <lightning-tab label="Triggers & Mappings">
-                
+            <lightning-tab label="Triggers & Mappings" icon-name="utility:flow">
                 <div class="slds-p-around_medium">
                     <div class="slds-grid slds-gutters">
                         
@@ -28,8 +27,12 @@
 
                     </div>
                 </div>
-
             </lightning-tab>
+
+            <lightning-tab label="Recovery Operations" icon-name="utility:refresh">
+                <c-integration-recovery-manager></c-integration-recovery-manager>
+            </lightning-tab>
+
         </lightning-tabset>
 
     </lightning-card>

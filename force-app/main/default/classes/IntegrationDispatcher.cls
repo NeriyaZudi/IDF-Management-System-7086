@@ -19,7 +19,7 @@ public with sharing class IntegrationDispatcher {
         if (requests.isEmpty()) return;
         
         // 1. Bulkify: Collect keys to query Metadata
-        Request firstReq = requests[0]; // Assuming homogeneous batch from Flow
+        Request firstReq = requests[0]; 
         
         // 2. Query Metadata to find matching Systems
         List<Integration_Trigger_Config__mdt> configs = [

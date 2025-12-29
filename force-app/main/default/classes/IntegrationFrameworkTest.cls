@@ -29,11 +29,7 @@ private class IntegrationFrameworkTest {
         req.triggerValue = 'Contracting'; // This matches our Metadata
         
         Test.startTest();
-            // A. Execute Dispatcher
             IntegrationDispatcher.dispatch(new List<IntegrationDispatcher.Request>{ req });
-            
-            // B. Force Async to Run (Queueable)
-            // Test.stopTest() forces all asynchronous jobs to complete immediately
         Test.stopTest();
         
         // C. ASSERTIONS: Did it create the right records?
