@@ -1,18 +1,19 @@
 import { LightningElement, track, wire, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CloseActionScreenEvent } from 'lightning/actions';
-import { getRecord, getFieldValue, notifyRecordUpdateAvailable } from 'lightning/uiRecordApi';
+import { getRecord, getFieldValue, notifyRecordUpdateAvailable } from 'lightning/uiRecordApi'; 
 
-// 2. הגדרת השדות שאנחנו צריכים לשלוף
-import NAME_FIELD from '@salesforce/schema/Equipment__c.Name';
-import SERIAL_FIELD from '@salesforce/schema/Equipment__c.Serial_Number__c';
+// --- שינוי: ייבוא שדות של Night_Device__c ---
+import NAME_FIELD from '@salesforce/schema/Night_Device__c.Name';
+import SERIAL_FIELD from '@salesforce/schema/Night_Device__c.Serial_Number__c';
 
-import getSoldiers from '@salesforce/apex/EquipmentSignatureController.getSoldiers';
-import createSignatures from '@salesforce/apex/EquipmentSignatureController.createSignatures';
+// --- שינוי: ייבוא מהקונטרולר החדש ---
+import getSoldiers from '@salesforce/apex/NightDeviceSignatureController.getSoldiers';
+import createSignatures from '@salesforce/apex/NightDeviceSignatureController.createSignatures';
 
-export default class SignatureFormEquipmentPage extends LightningElement {
+export default class SignatureFormNightDevice extends LightningElement {
     @api recordId;
-    @api objectApiName;
+    @api objectApiName; // Night_Device__c
 
     @track soldierOptions = [];
     selectedSoldierId;
@@ -20,15 +21,14 @@ export default class SignatureFormEquipmentPage extends LightningElement {
     comments = '';
     isLoading = false;
 
-    // 3. שליפת המידע על הציוד הנוכחי
+    // שליפת המידע על האמצעי לילה
     @wire(getRecord, { recordId: '$recordId', fields: [NAME_FIELD, SERIAL_FIELD] })
-    equipment;
+    device;
 
-    // 4. יצירת הכותרת המשולבת (שם + מספר צ')
-    get equipmentTitle() {
-        if (this.equipment.data) {
-            const name = getFieldValue(this.equipment.data, NAME_FIELD);
-            const serial = getFieldValue(this.equipment.data, SERIAL_FIELD);
+    get deviceTitle() {
+        if (this.device.data) {
+            const name = getFieldValue(this.device.data, NAME_FIELD);
+            const serial = getFieldValue(this.device.data, SERIAL_FIELD);
             
             if (serial) {
                 return `${name} - מספר צ': ${serial}`;
@@ -38,8 +38,6 @@ export default class SignatureFormEquipmentPage extends LightningElement {
         return 'טוען נתונים...';
     }
 
-    // --- מכאן והלאה הקוד נשאר זהה למה שהיה לך ---
-    
     @wire(getSoldiers)
     wiredSoldiers({ data, error }) {
         if (data) {
@@ -75,25 +73,22 @@ export default class SignatureFormEquipmentPage extends LightningElement {
         this.isLoading = true;
 
         try {
-            // 1. קריאה לשרת לביצוע החתימה
+            // שימוש בפונקציה מהקונטרולר החדש (פרמטר deviceIds)
             await createSignatures({
                 soldierId: this.selectedSoldierId,
-                equipmentIds: [this.recordId],
+                deviceIds: [this.recordId],
                 location: this.location,
                 comments: this.comments
             });
 
-            this.showToast('הצלחה', 'החתימה נשמרה בהצלחה והציוד עודכן', 'success');
+            this.showToast('הצלחה', 'החתימה נשמרה בהצלחה והאמצעי עודכן', 'success');
 
-            // 2. תיקון: הודעה למערכת שהרשומה התעדכנה (רענון בכוח)
-            // זה גורם לכל הרכיבים בדף שמציגים את הרשומה הזו להיטען מחדש
             try {
                 await notifyRecordUpdateAvailable([{recordId: this.recordId}]);
             } catch(refreshError) {
                 console.error('Refresh failed', refreshError);
             }
 
-            // 3. סגירת החלונית רק אחרי שהודענו על הרענון
             this.dispatchEvent(new CloseActionScreenEvent());
 
         } catch (error) {

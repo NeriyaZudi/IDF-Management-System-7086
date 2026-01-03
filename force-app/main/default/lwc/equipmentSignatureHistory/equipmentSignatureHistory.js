@@ -1,8 +1,9 @@
 import { LightningElement, api, wire } from 'lwc';
-import getHistoryForEquipment from '@salesforce/apex/EquipmentSignatureHistoryController.getHistoryForEquipment';
+// 1. שינוי הייבוא למתודה הגנרית החדשה
+import getSignatureHistory from '@salesforce/apex/EquipmentSignatureHistoryController.getSignatureHistory';
 
 export default class EquipmentSignatureHistory extends LightningElement {
-    @api recordId; // Equipment__c Id
+    @api recordId; // יקבל אוטומטית גם מ-Equipment וגם מ-Night_Device
 
     data = [];
     error;
@@ -27,7 +28,8 @@ export default class EquipmentSignatureHistory extends LightningElement {
         { label: 'הערות', fieldName: 'comments' }
     ];
 
-    @wire(getHistoryForEquipment, { equipmentId: '$recordId' })
+    // 2. שינוי שם הפרמטר שנשלח ל-Apex מ-equipmentId ל-recordId
+    @wire(getSignatureHistory, { recordId: '$recordId' })
     wiredHistory({ data, error }) {
         if (data) {
             this.data = data;

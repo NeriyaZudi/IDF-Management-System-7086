@@ -1,0 +1,39 @@
+/* עיצוב כותרת הציוד */
+.equipment-header {
+    background-color: #f3f2f2;
+    border-radius: 0.5rem;
+    border: 1px solid #dddbda;
+}
+
+/* עיצוב שורות המידע בתוך כרטיס הציוד */
+.field-wrapper {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #3e3e3c;
+    margin-top: 0.5rem;
+}
+
+/* תיקון רווחים לאייקונים (מותאם לעברית) */
+.field-wrapper lightning-icon {
+    margin-left: 0.5rem;
+}
+
+.label-text {
+    font-weight: 700;
+    margin-left: 0.25rem;
+    color: #444;
+}
+
+/* התאמת Output Field שייראה כחלק מהטקסט */
+lightning-output-field {
+    display: inline-block;
+    min-height: auto;
+}
+
+/* כפתור רחב יותר */
+.wide-button button {
+    width: 200px;
+    height: 40px;
+    font-size: 1rem;
+}

@@ -14,19 +14,26 @@ public with sharing class EquipmentSignatureController {
         @AuraEnabled public String currentLocation;
     }
 
-    @AuraEnabled(cacheable=true)
+@AuraEnabled(cacheable=true)
     public static List<SoldierOption> getSoldiers() {
         List<SoldierOption> options = new List<SoldierOption>();
 
-        for (Soldier__c s : [SELECT Id, Name, Personal_Number__c, Unit__c FROM Soldier__c ORDER BY Name]) {
+        for (Soldier__c s : [
+            SELECT Id, Name, Personal_Number__c, Class__c 
+            FROM Soldier__c 
+            WHERE Status__c != 'לא בשמ"פ' 
+            ORDER BY Name
+        ]) {
             SoldierOption o = new SoldierOption();
             o.value = s.Id;
+            
+            // בניית התווית לתצוגה
             String label = s.Name;
             if (String.isNotBlank(s.Personal_Number__c)) {
                 label += ' (' + s.Personal_Number__c + ')';
             }
-            if (String.isNotBlank(s.Unit__c)) {
-                label += ' - ' + s.Unit__c;
+            if (String.isNotBlank(s.Class__c)) { // שים לב: בקוד ששלחת השתמשת ב-Class__c
+                label += ' - ' + s.Class__c;
             }
             o.label = label;
             options.add(o);
