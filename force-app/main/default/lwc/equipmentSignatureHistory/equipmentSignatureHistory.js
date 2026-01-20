@@ -1,9 +1,10 @@
 import { LightningElement, api, wire } from 'lwc';
-// 1. שינוי הייבוא למתודה הגנרית החדשה
 import getSignatureHistory from '@salesforce/apex/EquipmentSignatureHistoryController.getSignatureHistory';
+// 1. ייבוא זיהוי המכשיר
+import FORM_FACTOR from '@salesforce/client/formFactor';
 
 export default class EquipmentSignatureHistory extends LightningElement {
-    @api recordId; // יקבל אוטומטית גם מ-Equipment וגם מ-Night_Device
+    @api recordId;
 
     data = [];
     error;
@@ -16,19 +17,18 @@ export default class EquipmentSignatureHistory extends LightningElement {
             label: 'זמן חתימה',
             fieldName: 'signedTime',
             type: 'date',
-            typeAttributes: {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            }
+            typeAttributes: { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }
+        },
+        {
+            label: 'זמן החזרה',
+            fieldName: 'returnedTime',
+            type: 'date',
+            typeAttributes: { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }
         },
         { label: 'מיקום בעת חתימה', fieldName: 'locationAtSignature' },
         { label: 'הערות', fieldName: 'comments' }
     ];
 
-    // 2. שינוי שם הפרמטר שנשלח ל-Apex מ-equipmentId ל-recordId
     @wire(getSignatureHistory, { recordId: '$recordId' })
     wiredHistory({ data, error }) {
         if (data) {
@@ -47,5 +47,10 @@ export default class EquipmentSignatureHistory extends LightningElement {
 
     get noData() {
         return !this.hasData && !this.error;
+    }
+
+    // 2. משתנה בוליאני שבודק אם זה מובייל
+    get isMobile() {
+        return FORM_FACTOR === 'Small';
     }
 }

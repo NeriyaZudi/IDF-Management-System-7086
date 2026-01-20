@@ -1,0 +1,26 @@
+.relative-container {
+    position: relative;
+}
+
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 9000; /* כדי שיהיה מעל הכל */
+    max-height: 200px; /* גלילה אם יש הרבה חיילים */
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+}
+
+.slds-listbox__item {
+    cursor: pointer;
+    border-bottom: 1px solid #f3f2f2;
+}
+
+.slds-listbox__item:hover {
+    background-color: #f3f2f2;
+}

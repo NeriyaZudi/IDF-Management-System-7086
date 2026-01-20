@@ -1,0 +1,103 @@
+<template>
+    <div class="slds-p-around_medium mobile-container">
+        
+        <div class="slds-text-align_center slds-m-bottom_medium">
+            <h1 class="slds-text-heading_medium slds-text-color_success">
+                <lightning-icon icon-name="standard:task" size="small" class="slds-m-right_small"></lightning-icon>
+                חתימה על ציוד
+            </h1>
+        </div>
+
+        <template lwc:if={equipment}>
+            <div class="slds-box slds-theme_shade slds-m-bottom_medium slds-border_left slds-theme_alert-texture">
+                <div class="slds-grid slds-grid_align-spread">
+                    <div>
+                        <div class="slds-text-title_caps slds-text-color_weak">ציוד לחתימה</div>
+                        <div class="slds-text-heading_small slds-m-top_xx-small"><strong>{equipment.Name}</strong></div>
+                        <div class="slds-text-body_small">מס"ד: {equipment.Serial_Number__c}</div>
+                    </div>
+                    <lightning-icon icon-name="custom:custom32" size="medium"></lightning-icon>
+                </div>
+            </div>
+        </template>
+        <template lwc:else>
+            <div class="slds-box slds-theme_shade slds-m-bottom_medium slds-text-align_center">
+                <lightning-spinner alternative-text="טוען..." size="small"></lightning-spinner>
+                <p class="slds-p-top_large">טוען פרטי ציוד...</p>
+            </div>
+        </template>
+
+        <div class="slds-form-element slds-m-bottom_medium relative-container">
+            <label class="slds-form-element__label" for="soldier-search">חפש חייל</label>
+            <div class="slds-form-element__control">
+                <div class="slds-input-has-icon slds-input-has-icon_right">
+                    <lightning-icon icon-name="utility:search" size="x-small" class="slds-icon slds-input__icon slds-input__icon_right slds-icon-text-default"></lightning-icon>
+                    
+                    <input 
+                        type="text" 
+                        id="soldier-search" 
+                        class="slds-input" 
+                        placeholder="הקלד שם..."
+                        value={soldierSearchTerm}
+                        oninput={handleSearch}
+                        onfocus={handleFocus}
+                    />
+                </div>
+            </div>
+
+            <template lwc:if={showSoldierList}>
+                <div class="search-dropdown slds-box slds-box_xx-small slds-theme_default">
+                    <ul class="slds-listbox slds-listbox_vertical">
+                        
+                        <template for:each={filteredSoldiers} for:item="soldier">
+                            <li key={soldier.id} role="presentation" class="slds-listbox__item" onclick={selectSoldier} data-id={soldier.id}>
+                                <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media_center" role="option">
+                                    <span class="slds-media__figure slds-listbox__option-icon">
+                                        <lightning-icon icon-name="standard:user" size="small"></lightning-icon>
+                                    </span>
+                                    <span class="slds-media__body">
+                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">{soldier.label}</span>
+                                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{soldier.subLabel}</span>
+                                    </span>
+                                </div>
+                            </li>
+                        </template>
+
+                        <template lwc:if={isSoldierListEmpty}>
+                            <li class="slds-p-around_small slds-text-color_weak slds-text-align_center">לא נמצאו תוצאות</li>
+                        </template>
+
+                    </ul>
+                </div>
+            </template>
+        </div>
+
+        <lightning-input 
+            label="מיקום" 
+            value={location} 
+            onchange={handleLocationChange} 
+            class="slds-m-bottom_medium">
+        </lightning-input>
+        
+        <lightning-textarea 
+            label="הערות" 
+            value={comments} 
+            onchange={handleCommentsChange} 
+            class="slds-m-bottom_medium">
+        </lightning-textarea>
+
+        <lightning-button 
+            variant="brand" 
+            label="אשר חתימה" 
+            onclick={handleSign} 
+            disabled={isSignDisabled} 
+            class="slds-size_full slds-m-top_small">
+        </lightning-button>
+        
+        <template lwc:if={isLoading}>
+            <div class="slds-is-relative">
+                <lightning-spinner alternative-text="שומר..." size="medium"></lightning-spinner>
+            </div>
+        </template>
+    </div>
+</template>

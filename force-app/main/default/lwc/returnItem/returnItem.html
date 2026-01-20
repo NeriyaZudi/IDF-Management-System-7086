@@ -1,0 +1,39 @@
+<template>
+    <lightning-card title="Item Status" icon-name="standard:product_item">
+        <div class="slds-p-around_medium">
+            
+            <template if:true={signatureId}>
+                <div class="slds-box slds-theme_warning slds-m-bottom_medium">
+                    <p><strong>סטטוס נוכחי: </strong> (חייל חתום) </p>
+                </div>
+
+                <lightning-record-view-form record-id={signatureId} object-api-name="Signature__c">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <lightning-output-field field-name="Soldier__c"></lightning-output-field>
+                        </div>
+                        <div class="slds-col">
+                            <lightning-output-field field-name="Signed_Time__c"></lightning-output-field>
+                        </div>
+                    </div>
+                </lightning-record-view-form>
+
+                <div class="slds-m-top_medium slds-text-align_center">
+                    <lightning-button 
+                        variant="brand" 
+                        label="החזרת ציוד" 
+                        onclick={handleReturn}>
+                    </lightning-button>
+                </div>
+            </template>
+
+            <template if:false={signatureId}>
+                <div class="slds-box slds-theme_success slds-text-align_center">
+                    <h3 class="slds-text-heading_small">הציוד פנוי לחתימה</h3>
+                    <p class="slds-text-body_small">אין החתמות כרגע.</p>
+                </div>
+            </template>
+
+        </div>
+    </lightning-card>
+</template>

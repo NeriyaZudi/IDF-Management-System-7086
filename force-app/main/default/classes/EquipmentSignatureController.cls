@@ -66,6 +66,14 @@ public with sharing class EquipmentSignatureController {
         return rows;
     }
 
+    @AuraEnabled(cacheable=true)
+    public static Equipment__c getEquipmentById(Id equipmentId) {
+
+        if (equipmentId == null) {
+            throw new AuraHandledException('Equipment ID is required.');
+        }
+        return [SELECT Id, Name, Serial_Number__c, Type__c, Status__c, Current_Location__c FROM Equipment__c WHERE Id = :equipmentId LIMIT 1];}
+
     @AuraEnabled
     public static void createSignatures(
         Id soldierId,

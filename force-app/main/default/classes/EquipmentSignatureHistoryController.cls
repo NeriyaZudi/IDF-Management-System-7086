@@ -6,6 +6,7 @@ public with sharing class EquipmentSignatureHistoryController {
         @AuraEnabled public String soldierPhone;
         @AuraEnabled public String soldierUnit;
         @AuraEnabled public Datetime signedTime;
+        @AuraEnabled public Datetime returnedTime; // *** NEW FIELD ***
         @AuraEnabled public String locationAtSignature;
         @AuraEnabled public String comments;
     }
@@ -16,16 +17,17 @@ public with sharing class EquipmentSignatureHistoryController {
             return new List<SignatureHistoryRow>();
         }
 
-        // 1. זיהוי סוג האובייקט ממנו הגיעה הקריאה
+        // 1. Identify the object type
         String sObjName = recordId.getSobjectType().getDescribe().getName();
         
         List<Signature__c> signatures = new List<Signature__c>();
 
-        // 2. שאילתה דינמית בהתאם לסוג האובייקט
+        // 2. Dynamic query based on object type
+        // *** ADDED Returned_Time__c TO BOTH QUERIES ***
         if (sObjName == 'Equipment__c') {
             signatures = [
                 SELECT Id, Soldier__r.Name, Soldier__r.Phone_Number__c, Soldier__r.Unit__c,
-                       Signed_Time__c, Location_at_Signature__c, Comments__c
+                       Signed_Time__c, Returned_Time__c, Location_at_Signature__c, Comments__c
                 FROM Signature__c
                 WHERE Equipment__c = :recordId
                 ORDER BY Signed_Time__c DESC, CreatedDate DESC
@@ -33,17 +35,16 @@ public with sharing class EquipmentSignatureHistoryController {
         } else if (sObjName == 'Night_Device__c') {
             signatures = [
                 SELECT Id, Soldier__r.Name, Soldier__r.Phone_Number__c, Soldier__r.Unit__c,
-                       Signed_Time__c, Location_at_Signature__c, Comments__c
+                       Signed_Time__c, Returned_Time__c, Location_at_Signature__c, Comments__c
                 FROM Signature__c
                 WHERE Night_Device__c = :recordId
                 ORDER BY Signed_Time__c DESC, CreatedDate DESC
             ];
         } else {
-            // אם זה לא אחד מהשניים, נחזיר רשימה ריקה
             return new List<SignatureHistoryRow>();
         }
 
-        // 3. המרה למבנה הטבלה
+        // 3. Convert to wrapper list
         List<SignatureHistoryRow> result = new List<SignatureHistoryRow>();
         for (Signature__c s : signatures) {
             SignatureHistoryRow row = new SignatureHistoryRow();
@@ -52,6 +53,7 @@ public with sharing class EquipmentSignatureHistoryController {
             row.soldierPhone        = (s.Soldier__r != null ? s.Soldier__r.Phone_Number__c : null);
             row.soldierUnit         = (s.Soldier__r != null ? s.Soldier__r.Unit__c : null);
             row.signedTime          = s.Signed_Time__c;
+            row.returnedTime        = s.Returned_Time__c; // *** MAP NEW FIELD ***
             row.locationAtSignature = s.Location_at_Signature__c;
             row.comments            = s.Comments__c;
             result.add(row);

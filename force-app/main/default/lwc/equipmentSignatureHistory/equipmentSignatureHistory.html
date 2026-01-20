@@ -2,28 +2,69 @@
     <lightning-card title="היסטוריית חתימות עבור הציוד" icon-name="standard:log_a_call">
         <div class="slds-p-around_medium">
 
-            <!-- טבלה כשהיו חתימות -->
-            <template if:true={hasData}>
-                <lightning-datatable
-                    key-field="id"
-                    data={data}
-                    columns={columns}
-                    show-row-number-column>
-                </lightning-datatable>
-            </template>
-
-            <!-- הודעה כשאין חתימות -->
-            <template if:true={noData}>
-                <p>אין עדיין חתימות עבור ציוד זה.</p>
-            </template>
-
-            <!-- הודעת שגיאה -->
-            <template if:true={error}>
+            <template lwc:if={error}>
                 <div class="slds-text-color_error slds-m-top_small">
                     {error}
                 </div>
             </template>
 
+            <template lwc:elseif={noData}>
+                <p>אין עדיין חתימות עבור ציוד זה.</p>
+            </template>
+
+            <template lwc:else>
+                
+                <template lwc:if={isMobile}>
+                    <div class="mobile-list">
+                        <template for:each={data} for:item="row">
+                            <div key={row.id} class="slds-box slds-box_x-small slds-m-bottom_small slds-theme_shade">
+                                <div class="slds-grid slds-grid_align-spread slds-m-bottom_x-small">
+                                    <div class="slds-text-heading_small slds-text-title_bold">
+                                        <lightning-icon icon-name="standard:user" size="xx-small" class="slds-m-right_x-small"></lightning-icon>
+                                        {row.soldierName}
+                                    </div>
+                                    <div class="slds-text-color_weak slds-text-body_small">{row.soldierUnit}</div>
+                                </div>
+                                
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_x-small">
+                                        <p class="slds-text-title_caps slds-text-color_weak">זמן חתימה</p>
+                                        <lightning-formatted-date-time value={row.signedTime} 
+                                            year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit">
+                                        </lightning-formatted-date-time>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_x-small">
+                                        <p class="slds-text-title_caps slds-text-color_weak">זמן החזרה</p>
+                                        <template lwc:if={row.returnedTime}>
+                                            <lightning-formatted-date-time value={row.returnedTime} 
+                                                year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit">
+                                            </lightning-formatted-date-time>
+                                        </template>
+                                        <template lwc:else>-</template>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1">
+                                        <p class="slds-text-title_caps slds-text-color_weak">הערות</p>
+                                        <p>{row.comments}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <template lwc:else>
+                    <div style="height: 300px;">
+                        <lightning-datatable
+                            key-field="id"
+                            data={data}
+                            columns={columns}
+                            hide-checkbox-column
+                            show-row-number-column>
+                        </lightning-datatable>
+                    </div>
+                </template>
+
+            </template>
         </div>
     </lightning-card>
 </template>

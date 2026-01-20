@@ -2,18 +2,13 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>65.0</apiVersion>
     <isExposed>true</isExposed>
-    <masterLabel>Equipment Signature History</masterLabel>
-    <description>היסטוריה של חתימות עבור פריט ציוד</description>
-    
     <targets>
         <target>lightning__RecordPage</target>
     </targets>
-
     <targetConfigs>
         <targetConfig targets="lightning__RecordPage">
             <supportedFormFactors>
                 <supportedFormFactor type="Large" /> <supportedFormFactor type="Small" /> </supportedFormFactors>
-
             <objects>
                 <object>Equipment__c</object>
                 <object>Night_Device__c</object>
